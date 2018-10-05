@@ -51,66 +51,23 @@ export default class EventCalendar extends React.Component {
     });
   }
 
-  _renderItem({ index, item }) {
-    const { width, format24h, initDate, scrollToFirst } = this.props;
-    const date = moment(initDate).add(index - this.props.size, "days");
-    return (
-      <DayView
-        date={date}
-        index={index}
-        format24h={format24h}
-        formatHeader={this.props.formatHeader}
-        headerStyle={this.props.headerStyle}
-        renderEvent={this.props.renderEvent}
-        eventTapped={this.props.eventTapped}
-        events={item}
-        width={width}
-        styles={this.styles}
-        scrollToFirst={scrollToFirst}
-      />
-    );
-  }
-
-  _goToPage(index) {
-    if (index <= 0 || index >= this.props.size * 2) {
-      return;
-    }
-    const date = moment(this.props.initDate).add(
-      index - this.props.size,
-      "days"
-    );
-    this.refs.calendar.scrollToIndex({ index, animated: false });
-    this.setState({ index, date });
-  }
-
   render() {
-    const { width, virtualizedListProps, events } = this.props;
+    const { width, virtualizedListProps, events, format24h, initDate, scrollToFirst } = this.props;
     return (
       <View style={[this.styles.container, { width }]}>
-        <VirtualizedList
-          ref="calendar"
-          windowSize={2}
-          initialNumToRender={2}
-          initialScrollIndex={this.props.size}
-          data={events}
-          getItemCount={() => this.props.size * 2}
-          getItem={this._getItem.bind(this)}
-          keyExtractor={(item, index) => index}
-          getItemLayout={this._getItemLayout.bind(this)}
-          horizontal
-          pagingEnabled
-          renderItem={this._renderItem.bind(this)}
-          style={{ width: width }}
-          onMomentumScrollEnd={event => {
-            const index = parseInt(event.nativeEvent.contentOffset.x / width);
-            const date = moment(this.props.initDate).add(
-              index - this.props.size,
-              "days"
-            );
-            this.setState({ index, date });
-          }}
-          {...virtualizedListProps}
-        />
+          <DayView
+              date={moment(initDate)}
+              index={0}
+              format24h={format24h}
+              formatHeader={this.props.formatHeader}
+              headerStyle={this.props.headerStyle}
+              renderEvent={this.props.renderEvent}
+              eventTapped={this.props.eventTapped}
+              events={events}
+              width={width}
+              styles={this.styles}
+              scrollToFirst={scrollToFirst}
+          />
       </View>
     );
   }

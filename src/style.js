@@ -11,11 +11,11 @@ export default function styleConstructor (
   let style = {
     container: {
       flex: 1,
-      backgroundColor: '#ffff',
+      backgroundColor: '#fff0',
       ...theme.container
     },
     contentStyle: {
-      backgroundColor: '#ffff',
+      backgroundColor: '#fff0',
       height: calendarHeight + 10
     },
     header: {
@@ -40,7 +40,7 @@ export default function styleConstructor (
     },
     event: {
       position: 'absolute',
-      backgroundColor: '#F0F4FF',
+      backgroundColor: '#FFF',
       opacity: 0.8,
       borderColor: '#DDE5FD',
       borderWidth: 1,
@@ -71,7 +71,7 @@ export default function styleConstructor (
       marginTop: 3,
       fontSize: 10,
       fontWeight: 'bold',
-      color: '#615B73',
+      color: '#777',
       flexWrap: 'wrap',
       ...theme.eventTimes
     },
@@ -79,7 +79,7 @@ export default function styleConstructor (
       height: 1,
       position: 'absolute',
       left: leftMargin,
-      backgroundColor: 'rgb(216,216,216)',
+      backgroundColor: '#777',
       ...theme.line
     },
     lineNow: {
@@ -92,8 +92,8 @@ export default function styleConstructor (
     timeLabel: {
       position: 'absolute',
       left: 15,
-      color: 'rgb(170,170,170)',
-      fontSize: 10,
+      color: '#777',
+      fontSize: 16,
       fontFamily: 'Helvetica Neue',
       fontWeight: '500',
       ...theme.timeLabel

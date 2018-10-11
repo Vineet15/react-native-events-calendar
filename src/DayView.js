@@ -5,9 +5,6 @@ import React from "react";
 import moment from "moment";
 import _ from "lodash";
 
-import PatientFlag from "../../../src/components/common/PatientFlagContainer";
-import { Icon } from "../../../src/components/common";
-
 const LEFT_MARGIN = 60 - 1;
 // const RIGHT_MARGIN = 10
 const CALENDER_HEIGHT = 2400;
@@ -145,126 +142,51 @@ export default class DayView extends React.PureComponent {
       // However it would make sense to overflow the title to a new line if needed
       const numberOfLines = Math.floor(event.height / TEXT_LINE_HEIGHT);
       const formatTime = this.props.format24h ? "HH:mm" : "hh:mm A";
+      event.numberOfLines = numberOfLines;
+      event.formatTime = formatTime;
 
       return (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => this._onEventTapped(this.props.events[event.index])}
+        <View
+          key={i}
+          style={[
+            styles.event,
+            style,
+            {
+              borderColor: event.ActivityColor,
+              borderWidth: 2,
+              backgroundColor: event.status === "Open" ? "white" : "#D3D3D3"
+            }
+          ]}
         >
-          <View
-            key={i}
-            style={[
-              styles.event,
-              style,
-              {
-                borderColor: event.ActivityColor,
-                borderWidth: 2,
-                backgroundColor:
-                  event.status === "Open" ||
-                  event.status === "In Progress (Manually Set)"
-                    ? "white"
-                    : "#D3D3D3"
+          {this.props.renderEvent ? (
+            this.props.renderEvent(event)
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() =>
+                this._onEventTapped(this.props.events[event.index])
               }
-            ]}
-          >
-            {this.props.renderEvent ? (
-              this.props.renderEvent(event)
-            ) : (
-              <View>
-                <Text numberOfLines={1} style={styles.eventTitle}>
-                  {event.title || "Event"}
+            >
+              <Text numberOfLines={1} style={styles.eventTitle}>
+                {event.title || "Event"}
+              </Text>
+              {numberOfLines > 1 ? (
+                <Text
+                  numberOfLines={numberOfLines - 1}
+                  style={[styles.eventSummary]}
+                >
+                  {event.summary || " "}
                 </Text>
-                {event.PatientId && numberOfLines > 1 ? (
-                  <View
-                    style={{
-                      flexDirection: "row"
-                    }}
-                  >
-                    <PatientFlag
-                      wrapperStyle={{ marginLeft: 5, marginRight: 5 }}
-                      automationID={"allergiesFlag"}
-                      size={50}
-                      id={event.PatientId}
-                      icon="allergies"
-                      uniqueId={event.PatientId}
-                      from="appointment"
-                    />
-
-                    <PatientFlag
-                      wrapperStyle={{ marginLeft: 5, marginRight: 5 }}
-                      automationID={"inPatientFlag"}
-                      size={50}
-                      id={event.PatientId}
-                      icon="inPatient"
-                      uniqueId={event.PatientId}
-                      from="appointment"
-                    />
-
-                    <PatientFlag
-                      wrapperStyle={{ marginLeft: 5, marginRight: 5 }}
-                      automationID={"directiveFlag"}
-                      size={50}
-                      id={event.PatientId}
-                      icon="directive"
-                      uniqueId={event.PatientId}
-                      from="appointment"
-                    />
-
-                    <PatientFlag
-                      wrapperStyle={{ marginLeft: 5, marginRight: 5 }}
-                      automationID={"infectionFlag"}
-                      size={50}
-                      id={event.PatientId}
-                      icon="infection"
-                      uniqueId={event.PatientId}
-                      from="appointment"
-                    />
-                    {event.flag ? <Icon name="checklist" size={20} /> : null}
-                  </View>
-                ) : event.flag ? (
-                  <View
-                    style={{
-                      flexDirection: "row"
-                    }}
-                  >
-                    <Icon name="checklist" size={20} />
-                  </View>
-                ) : null}
-
-                {numberOfLines > 1 ? (
-                  <View>
-                    <Text
-                      numberOfLines={numberOfLines - 1}
-                      style={
-                        event.status === "Manually Completed"
-                          ? [styles.eventSummary_1]
-                          : [styles.eventSummary]
-                      }
-                    >
-                      {event.status === "Manually Completed"
-                        ? "Completed"
-                        : event.status === "In Progress (Manually Set)"
-                          ? "In Progress"
-                          : event.status + "\n"}
-                    </Text>
-                    <Text
-                      numberOfLines={numberOfLines - 1}
-                      style={[styles.eventSummary]}
-                    >
-                      {event.summary || " "}
-                    </Text>
-                  </View>
-                ) : null}
-                {numberOfLines > 2 ? (
-                  <Text style={styles.eventTimes} numberOfLines={1}>
-                    {moment(event.start).format(formatTime)} -{" "}
-                    {moment(event.end).format(formatTime)}
-                  </Text>
-                ) : null}
-              </View>
-            )}
-          </View>
-        </TouchableOpacity>
+              ) : null}
+              {numberOfLines > 2 ? (
+                <Text style={styles.eventTimes} numberOfLines={1}>
+                  {moment(event.start).format(formatTime)} -{" "}
+                  {moment(event.end).format(formatTime)}
+                </Text>
+              ) : null}
+            </TouchableOpacity>
+          )}
+        </View>
       );
     });
 
